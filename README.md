@@ -1,0 +1,48 @@
+# Cybersecurity Search Utilizing Document Expansion and RAG
+
+Team: Nathan Poch, Harrison DiAmbrosio, Duncan Farquharson, Sai Teja Sunku
+
+## What is our tool?
+Our tool is a web-based search system that navigates a predetermined corpus of documents related to the exploitation of cyber vulnerabilities. It uses an automated document expansion process as preprocessing and Retrieval Augmented Generation (RAG) as postprocessing to retrieve documents relevant to a user's query, without requiring the user to be prior familiar with technical terminology. 
+
+The user of our tool would type a query into the provided search bar. Once they submit their query, our preprocessed corpus is sent through a RAG pipeline to determine which documents best fit the users query. The documents determined to be most relevant will be returned for the user to see, along with an AI-generated explanation of the reason the document was found relevant.
+
+## Why do we need our tool?
+
+Cybersecurity is a field that evolves rapidly, and with the advent of AI, new exploits are expected to be discovered at an even faster rate. With such a large volume of new security events, keeping up with the field is non-trivial, requiring experts to listen in on podcasts and regularly attend training (online or in-person) to keep up-to-date. Additionally, students, new professionals, or seasoned professionals investigating a new field may have difficulty identifying the appropriate terminology. 
+
+This tool, by using document expansion and RAG, aims to allow these groups the ability to query known exploit content without the need to know the precise terminology. This will allow users to locate a document they have never seen more easily, or find a document they have seen before without needing to remember the precise title or in-doc phrasing.
+
+## Data/Corpus
+
+We will be using the official Exploit-DB repository, found at [https://gitlab.com/exploit-database/exploitdb](https://gitlab.com/exploit-database/exploitdb). This gitlab repository contains exploit information for numerous systems, ranging from android to linux, and many applications, tools, and programming languages. The repository was last updated on October 2nd, 2026, making it a good reflection of the current state of the official Exploit-DB website / search engine.
+
+## Existing Approaches
+
+There are two main approaches to searching within the Exploit Database that exist currently. Present on the Exploit Database website, users have public access to the main page search and the advanced search. The main page search is a simple text box. The advanced search provides input fields for title, CVE number, author, content, and other more specific fields. Some other binary search flags are present, such as checks for verified entries and if the entry is associated with an application. Both of these search functions suffer from being far too strict in their results.
+Besides being slow, and sometimes entirely unresponsive, the main page search is very particular about the order that search terms appear. Often, even when provided with simple queries, the engine returns no results back to the user, and when combined with its flakey performance, makes for a generally poor user experience. The advanced search suffers from similar issues. The most notable difference from the main page search is the presence of many more input fields for precision query crafting. This not only makes searching Exploit Database unapproachable, but the engine also suffers from being too strict when returning results.
+Here is a simple example. Making a query on document titles for "vim" yields 15 results. One of the results is titled "vim 6.3 < 6.3.082 - 'modlines' Local Command Execution", but when modifying the previous query to be "vim modlines", no results are returned. Referencing the same vulnerability, the excerpt "anyone that opens the file with vim will execute the command" can be directly used as a content query to return the same document as the only result. However, removing one word from the excerpt immediately yields 0 results, even if this word is a stop word such as "the". This trivially demonstrates the unapproachable nature of this search method.
+
+## Preprocessing
+
+To reduce the response time in the search engine, we would add extra document descriptors for each document in the database using an LLM to extract useful information. This would include a technical document summary, short list of key words, related terms, entities/attributes, vulnerability type, and publish date if present. The addition of these extra descriptors would allow a query to have a deterministic result based on when using a probabilistic ranking function, rather than running a LLM on each of the document's contents at runtime, which would be both slow and non-deterministic.
+
+## Algorithm
+
+The core algorithm used to develop the context-based cybersecurity document retrieval system is Retrieval-Augmented Generation (RAG). RAG is a technique used to enhance the capabilities of Large Language Models (LLMs) by integrating external knowledge sources. Instead of relying solely on pre-trained knowledge, RAG allows an AI system to retrieve relevant information from an external knowledge base, such as the Exploit-DB repository, and use that retrieved data to generate accurate and contextually relevant responses. In this project, RAG enables users to search for cybersecurity exploits using natural-language queries without requiring prior familiarity with specific technical terminology.
+
+The main advantage of RAG is that it does not modify or fine-tune the model itself. Instead, it retrieves relevant information from the existing document corpus and dynamically incorporates it into the prompt during inference. This makes it effective for retrieving domain-specific information from a large and evolving collection of cybersecurity documents. In addition, RAG grounds the generated responses in the retrieved exploit documentation, allowing the system to provide explanations of why particular documents are relevant to a user's query.
+
+## Evaluation
+
+
+DeepEval will be used as the primary framework for evaluating the RAG pipeline using the LLM-as-a-judge approach. It will evaluate the system using three metrics:
+
+- Answer Relevancy measures how relevant the LLM-generated explanation is to the user's query.
+- Faithfulness measures whether the generated explanation is supported by the retrieved Exploit-DB documentation.
+- Contextual Relevancy measures how relevant the retrieved document chunks are to the user's query.
+
+DeepEval produces evaluation scores and explanations for these metrics, helping assess response quality and identify any inconsistencies, such as irrelevant retrieved documents or generated explanations that are not sufficiently grounded in the available cybersecurity context.
+	
+To compare our tool against ExploitDB, we will create test queries based on exploits known to be within the database. We will begin by identifying the exploit document within the database, and a technical query that retrieves it in the official ExploitDB engine. We will then generate non-technical alternatives to each term in the technical query, and iteratively replace each term with their non-technical alternatives. For each query, we would observe whether the appropriate exploit is present in the ranked return, its placement within the return, and the average number of technical terms required to identify the target document.
+
