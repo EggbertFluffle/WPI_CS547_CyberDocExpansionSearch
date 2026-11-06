@@ -3,6 +3,7 @@
 Team: Nathan Poch, Harrison DiAmbrosio, Duncan Farquharson, Sai Teja Sunku
 
 ## What is our tool?
+
 Our tool is a web-based search system that navigates a predetermined corpus of documents related to the exploitation of cyber vulnerabilities. It uses an automated document expansion process as preprocessing and Retrieval Augmented Generation (RAG) as postprocessing to retrieve documents relevant to a user's query, without requiring the user to be prior familiar with technical terminology. 
 
 The user of our tool would type a query into the provided search bar. Once they submit their query, our preprocessed corpus is sent through a RAG pipeline to determine which documents best fit the users query. The documents determined to be most relevant will be returned for the user to see, along with an AI-generated explanation of the reason the document was found relevant.
@@ -35,7 +36,6 @@ The main advantage of RAG is that it does not modify or fine-tune the model itse
 
 ## Evaluation
 
-
 DeepEval will be used as the primary framework for evaluating the RAG pipeline using the LLM-as-a-judge approach. It will evaluate the system using three metrics:
 
 - Answer Relevancy measures how relevant the LLM-generated explanation is to the user's query.
@@ -45,4 +45,3 @@ DeepEval will be used as the primary framework for evaluating the RAG pipeline u
 DeepEval produces evaluation scores and explanations for these metrics, helping assess response quality and identify any inconsistencies, such as irrelevant retrieved documents or generated explanations that are not sufficiently grounded in the available cybersecurity context.
 	
 To compare our tool against ExploitDB, we will create test queries based on exploits known to be within the database. We will begin by identifying the exploit document within the database, and a technical query that retrieves it in the official ExploitDB engine. We will then generate non-technical alternatives to each term in the technical query, and iteratively replace each term with their non-technical alternatives. For each query, we would observe whether the appropriate exploit is present in the ranked return, its placement within the return, and the average number of technical terms required to identify the target document.
-
