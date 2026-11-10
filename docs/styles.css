@@ -57,6 +57,38 @@ a {
 nav {
 	display: flex;
 	justify-content: space-between;
+}
 
-	span { }
+.search {
+	display: flex;
+	width: 100%;
+	margin-block: 5%;
+	font-size: 1.25rem;
+
+	#search-input {
+		flex-grow: 1;
+		border: none;
+		padding: 0.5rem;
+		margin-right: 1rem;
+		color: var(--background2);
+		font-size: inherit;
+	}
+
+	#search-input:focus {
+		outline: none;
+	}
+
+	#search-button {
+		padding: 0.5rem;
+		color: var(--background2);
+		background-color: var(--accent2);
+		border: none;
+		font-size: inherit;
+		transition: background-color 0.1s linear;
+	}
+
+	#search-button:hover {
+		cursor: pointer;
+		background-color: var(--accent1);
+	}
 }
