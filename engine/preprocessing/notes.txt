@@ -1,0 +1,5 @@
+To start the model server accessed by preprocessing.py:
+
+llama-server -hf saidutta69/LFM2.5-8B-A1B-heretic:Q4_K_M -ngl 99 -c 8192 --port 8080 --reasoning off --reasoning-budget 0
+
+#<-- Installation instructions pending... -->#
