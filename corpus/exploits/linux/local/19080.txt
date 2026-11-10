@@ -1,0 +1,34 @@
+#<-- Publish Date -->#
+1998-04-28
+
+#<-- Technical Document Summary (TDS) -->#
+Failed to generate
+
+#<-- Layman's Document Summary (LDS) -->#
+Failed to generate
+
+#<-- Key Words (KW) -->#
+Failed to generate
+
+#<-- Related Terms -->#
+Failed to generate
+
+#<-- Entities/Attributes -->#
+Failed to generate
+
+#<-- Vulnerability Type -->#
+Failed to generate
+
+#<-- Original Content -->#
+
+source: https://www.securityfocus.com/bid/94/info
+
+/usr/bin/suidexec will execute arbitrary commands as root,
+as soon as just _one_ suid root shell script can be found
+on the system: Just invoke
+
+/usr/bin/suidexec <your program> /path/to/script
+
+- it will happily execute your program with euid = 0. This
+is completely sufficient for doing arbitrary damage on the
+system.

