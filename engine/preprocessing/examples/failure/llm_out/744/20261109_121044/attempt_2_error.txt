@@ -1,0 +1,4 @@
+Document ID: 744
+Attempt: 2/3
+Error type: HTTPError
+Error message: 400 Client Error: Bad Request for url: http://127.0.0.1:8080/v1/chat/completions

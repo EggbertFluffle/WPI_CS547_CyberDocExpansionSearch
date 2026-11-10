@@ -1,0 +1,4 @@
+Document ID: 19080
+Attempt: 3/3
+Error type: ValueError
+Error message: Duplicate descriptor heading: technical_document_summary

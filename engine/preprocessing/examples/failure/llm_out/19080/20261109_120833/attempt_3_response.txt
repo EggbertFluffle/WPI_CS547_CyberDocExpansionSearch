@@ -1,0 +1,18 @@
+<<<TDS>>
+The technical mechanism involves a suid root shell script that, when executed via the /usr/bin/suidexec binary, allows arbitrary command execution as root. This occurs because the system fails to validate the permissions of suid scripts before invoking them, enabling an attacker to trigger code execution with elevated privileges.
+</<<<TDS>>
+<<<LDS>>
+The weakness is that suid root shell scripts are not subject to proper permission checks, allowing any user to execute commands with the privileges of the script's owner. This facilitates privilege escalation by letting an attacker run commands as root without additional authentication.
+</<<<LDS>>
+<<<KW>>>
+suidmanager, CVE-1999-1390, command execution, root shell script, privilege escalation, Debian, local vulnerability
+</<<<LDS>>
+<<<RELATED_TERMS>>
+exploit, command injection, suid script, root access, Debian, security focus, privilege escalation
+</<<<RELATED_TERMS>>
+<<<ENTITIES_ATTRIBUTES>>
+Software: suidmanager, Version: 0.18, Platform: Linux, File path: /usr/bin/suidexec, Function: execute, Attribute: euid = 0
+</<<<ENTITIES_ATTRIBUTES>>
+<<<VULNERABILITY_TYPE>>
+Not specified in source
+</<<<VULNERABILITY_TYPE>>

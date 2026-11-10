@@ -1,0 +1,4 @@
+Document ID: 744
+Attempt: 1/3
+Error type: ValueError
+Error message: Missing descriptor sections: entities_attributes, keywords, related_terms, vulnerability_type
