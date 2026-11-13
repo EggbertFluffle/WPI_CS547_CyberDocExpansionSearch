@@ -1,0 +1,5 @@
+2026-11-12 23:07:56,222 | INFO | Project root: /home/eggbert/programs/python/WPI_CS547_CyberDocExpansionSearch
+2026-11-12 23:07:56,222 | INFO | Dataset root: /home/eggbert/programs/python/WPI_CS547_ExploitDB_Small
+2026-11-12 23:07:56,222 | INFO | CSV: /home/eggbert/programs/python/WPI_CS547_ExploitDB_Small/files_exploits.csv
+2026-11-12 23:07:56,222 | INFO | Output: /home/eggbert/programs/python/WPI_CS547_CyberDocExpansionSearch/engine/preprocessing/expanded_exploits
+2026-11-12 23:07:56,226 | INFO | Documents selected: 1102
