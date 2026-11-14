@@ -10,10 +10,13 @@ OVERLAP = 50
 CHUNK_LENGTH = 500
 BATCH_SIZE = 16
 
-CORPUS_DIR = "./../../corpus/"
+CORPUS_DIR = "./../../corpus/exploits/linux/local/"
 EMBEDDINGS_PATH = "embeddings.npy"
 CHUNKS_PATH = "chunks.tsv"
-DEFAULT_QUERY = "environment variable"
+DEFAULT_QUERY = "io_uring send"
+
+TOP_K_CHUNKS = 30
+TOP_K_DOCS = 10
 
 
 def load_model():
@@ -69,8 +72,8 @@ def main(argv=None) -> None:
         save_index(chunks, vectors)
         print(f"Saved index with {len(chunks)} chunks.")
 
-    for score, doc, text in search(llm, chunks, vectors, args.query):
-        print(f"{score:.3f}  {doc}\n    {text[:120]}...\n")
+    for doc in search(llm, chunks, vectors, args.query):
+        print(doc)
 
 
 def chunk_file(document):
@@ -151,13 +154,22 @@ def load_index():
     return chunks, (vectors / norms).astype(np.float32)
 
 
-def search(llm, chunks, vectors, query, k=5):
+# Returs sorted list of top k (score, document, matched chunk)
+def search(llm, chunks, vectors, query, k=10):
     out = llm.create_embedding(f"search_query: {query}")
     q = np.array(out["data"][0]["embedding"], dtype=np.float32)
     q /= np.linalg.norm(q)
-    scores = vectors @ q  # cosine similarity, since both are normalized
-    top = np.argsort(scores)[::-1][:k]
-    return [(scores[i], chunks[i][0], chunks[i][1]) for i in top]
+    scores = vectors @ q  # cosine similarity (assumes `vectors` are L2-normalized)
+
+    top_docs = {}  # dict preserves insertion order (best score first)
+    for i in np.argsort(scores)[::-1]:
+        doc = chunks[i][0]
+        if doc not in top_docs:  # first hit = highest-scoring chunk for that doc
+            top_docs[doc] = float(scores[i])
+            if len(top_docs) >= TOP_K_DOCS:
+                break
+
+    return list(top_docs.items())  # [(doc, score), ...]
 
 
 if __name__ == "__main__":
