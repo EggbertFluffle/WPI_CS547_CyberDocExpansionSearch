@@ -1,0 +1,5 @@
+/embeddings.npy
+/chunks.tsv
+.venv/
+__pycache__/
+*.part

@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+from pathlib import Path
 
 import numpy as np
 from tqdm import tqdm
@@ -10,10 +11,11 @@ OVERLAP = 50
 CHUNK_LENGTH = 500
 BATCH_SIZE = 16
 
-CORPUS_DIR = "./../../corpus/exploits/linux/local/"
-EMBEDDINGS_PATH = "embeddings.npy"
-CHUNKS_PATH = "chunks.tsv"
-DEFAULT_QUERY = "io_uring send"
+INDEX_DIR = Path(__file__).resolve().parent  # engine/indexing
+CORPUS_DIR = INDEX_DIR.parent.parent / "corpus" / "exploits"
+EMBEDDINGS_PATH = INDEX_DIR / "embeddings.npy"
+CHUNKS_PATH = INDEX_DIR / "chunks.tsv"
+DEFAULT_QUERY = "io_uring sendmsg"
 
 TOP_K_CHUNKS = 30
 TOP_K_DOCS = 10
@@ -44,7 +46,7 @@ def main(argv=None) -> None:
     parser.add_argument(
         "--corpus",
         default=CORPUS_DIR,
-        help=f"Directory of documents to index (default: {CORPUS_DIR!r})",
+        help=f"Directory of documents to index (default: {CORPUS_DIR})",
     )
     parser.add_argument(
         "--force",

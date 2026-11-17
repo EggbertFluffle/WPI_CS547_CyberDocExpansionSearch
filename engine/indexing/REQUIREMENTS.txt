@@ -1,0 +1,7 @@
+# Direct dependencies for the indexing search script.
+# Versions match the ones previously resolved by uv.lock so the
+# embedding/index format stays the same.
+huggingface-hub==2.4.0
+llama-cpp-python==0.3.36
+numpy==2.5.4
+tqdm==4.70.1
