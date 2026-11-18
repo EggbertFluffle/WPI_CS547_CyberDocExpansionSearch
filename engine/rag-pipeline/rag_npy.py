@@ -21,7 +21,7 @@ CORPUS_DIR = PROJECT_ROOT / "corpus" / "exploits"
 EMBEDDINGS_PATH = PROJECT_ROOT / "engine" / "indexing" / "embeddings.npy"
 CHUNKS_PATH = PROJECT_ROOT / "engine" / "indexing" / "chunks.tsv"
 
-MODEL_NAME = "Dingdust/LFM2.5-8B-A1B-heretic"
+MODEL_NAME = "saidutta69/LFM2.5-8B-A1B-heretic"
 RERANKER_MODEL = "BAAI/bge-reranker-v2-m3"
 
 ORIGINAL_MARKER = "#<-- Original Content -->#"
