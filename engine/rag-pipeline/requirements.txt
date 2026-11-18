@@ -1,0 +1,12 @@
+numpy
+llama-cpp-python
+huggingface_hub
+torch
+transformers
+accelerate
+sentence-transformers
+rank_bm25
+langchain-core
+langchain-classic
+langchain-community
+langchain-huggingface
