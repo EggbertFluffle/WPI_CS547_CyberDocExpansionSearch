@@ -268,6 +268,38 @@ def search_exploits(query, retriever, dense_retriever, reranker, explanation_cha
     return generate_explanations(query, documents, explanation_chain)
 
 
+# For FastAPI
+def load_pipeline():
+    """Build the index, models, retrievers and LLM chain once.
+    Returns (retriever, dense_retriever, reranker, explanation_chain),
+    i.e. everything search_exploits() needs after the query."""
+    chunks, vectors = load_index()
+    embed_llm = load_embedding_model()
+
+    dense_retriever = NpyDenseRetriever(
+        llm=embed_llm, vectors=vectors, chunks=chunks, k=TOP_K_CHUNKS
+    )
+    bm25_retriever = BM25Retriever.from_documents(chunks)
+    bm25_retriever.k = TOP_K_CHUNKS
+    hybrid_retriever = EnsembleRetriever(
+        retrievers=[dense_retriever, bm25_retriever],
+        weights=[0.5, 0.5],
+    )
+
+    reranker = CrossEncoderReranker(
+        model=HuggingFaceCrossEncoder(model_name=RERANKER_MODEL),
+        top_n=TOP_K_CHUNKS,
+    )
+    retriever = ContextualCompressionRetriever(
+        base_compressor=reranker,
+        base_retriever=hybrid_retriever,
+    )
+
+    explanation_chain = build_explanation_chain()
+    return retriever, dense_retriever, reranker, explanation_chain
+
+
+# to debug this pipeline
 def main():
     query = " ".join(sys.argv[1:]) or (
         "How can an attacker execute commands remotely through a vulnerable web application?"
