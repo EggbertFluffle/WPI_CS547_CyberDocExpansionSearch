@@ -225,19 +225,21 @@ Explanation:"""
 )
 
 
-def build_explanation_chain():
+def build_llm(max_new_tokens=MAX_NEW_TOKENS):
     hf_pipeline = HuggingFacePipeline.from_model_id(
         model_id=MODEL_NAME,
         task="text-generation",
         device_map="auto",
         pipeline_kwargs={
-            "max_new_tokens": MAX_NEW_TOKENS,
+            "max_new_tokens": max_new_tokens,
             "do_sample": False,
             "return_full_text": False,
         },
     )
-    chat_model = ChatHuggingFace(llm=hf_pipeline)
-    return PROMPT | chat_model | StrOutputParser()
+    return ChatHuggingFace(llm=hf_pipeline)
+
+def build_explanation_chain():
+    return PROMPT | build_llm() | StrOutputParser()
 
 
 def strip_think(text):
